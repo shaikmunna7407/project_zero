@@ -33,21 +33,89 @@ public class ProfileDAOImpl implements ProfileDAO{
   public  Profile findByUserId(int userId){
        String sql="select *from Profile where userid=?";
        try(Connection con=DBConnection.getConnection();PreparedStatement ps=con.prepareStatement(sql)){
+           ps.setInt(1,userId);
            ResultSet rs=ps.executeQuery();
-           while(rs.next()){
-             Profile ps=new Profile(profile.getName())
+           if(rs.next()){
+             Profile pro=new Profile(rs.getInt("profileid"),
+                     rs.getInt("userid"),
+                     rs.getString("fullname"),
+                     rs.getString("bio"),
+                     "phone",
+                     "profileimageurl");
+               return pro;
            }
+
       }
        catch (Exception e){
            e.printStackTrace();
        }
+       return null;
   }
 
-    void updateFullName(int userId, String fullName);
+    public void updateFullName(int userId, String fullName){
+       String sql="update profiles set fullname=? where userId=?";
+       try(Connection con=DBConnection.getConnection();PreparedStatement ps=con.prepareStatement(sql)){
+            ps.setInt(1,userId);
+            ps.setString(2,fullName);
+           int rs=ps.executeUpdate();
+           if(rs>0){
+               System.out.println("user updated successfully");
+           }
 
-    void updateBio(int userId, String bio);
 
-    void updatePhone(int userId, String phone);
+       }
+       catch(Exception e){
+           e.printStackTrace();
+       }
+    }
 
-    void updateProfileImage(int userId, String profileImageUrl);
+
+   public  void updateBio(int userId, String bio){
+       String sql="update profiles set bio=? where userid=?";
+       try(Connection con=DBConnection.getConnection();PreparedStatement ps=con.prepareStatement(sql)){
+           ps.setInt(1,userId);
+           ps.setString(2,bio);
+           int row=ps.executeUpdate();
+           if(row>0){
+               System.out.println("bio is updated successfully");
+           }
+
+       }
+       catch(Exception e ){
+           e.printStackTrace();
+       }
+   }
+
+    public void updatePhone(int userId, String phone){
+       String sql="update profiles set phone=? where userId=? ";
+       try(Connection con=DBConnection.getConnection();PreparedStatement ps=con.prepareStatement(sql)){
+           ps.setInt(1,userId);
+           ps.setString(2,phone);
+           int rs=ps.executeUpdate();
+           if(rs>0){
+               System.out.println("phone number is excuted successfully");
+           }
+
+       }
+       catch(Exception e){
+           e.printStackTrace();
+       }
+    }
+
+
+    public void updateProfileImage(int userId, String profileImageUrl){
+       String sql="update profiles set profileImageUrl=? where userUd=?";
+       try(Connection con=DBConnection.getConnection();PreparedStatement ps=con.prepareStatement(sql)) {
+           ps.setInt(1, userId);
+           ps.setString(2, profileImageUrl);
+           int rs = ps.executeUpdate();
+           if (rs > 0) {
+               System.out.println("the profile_image is successfully updated");
+           }
+       }
+           catch(Exception e){
+               e.printStackTrace();
+           }
+
+    }
 }
